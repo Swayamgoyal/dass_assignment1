@@ -74,12 +74,16 @@ const createTeam = async (req, res) => {
             });
         }
 
+        // Generate unique invite code
+        const inviteCode = crypto.randomBytes(4).toString('hex').toUpperCase();
+
         // Create team
         const team = new Team({
             eventId,
             teamName,
             teamLeaderId: participantId,
             teamSize,
+            inviteCode,
             members: [{ participantId, status: 'accepted' }]
         });
 
