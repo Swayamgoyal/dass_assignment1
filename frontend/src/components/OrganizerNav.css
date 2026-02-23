@@ -1,0 +1,7 @@
+.organizer-sidebar {
+  background: #0f172a;
+}
+
+.organizer-sidebar .sidebar-link.active {
+  background: #0ea5e9;
+}

@@ -1,0 +1,161 @@
+.register-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gray-100);
+  padding: 1rem;
+}
+
+.register-container {
+  display: flex;
+  width: 100%;
+  max-width: 950px;
+  background: #fff;
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+.register-branding {
+  flex: 0 0 35%;
+  background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #0ea5e9 100%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  padding: 2.5rem;
+}
+
+.register-branding .branding-content h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 0.25rem;
+}
+
+.register-branding .branding-subtitle {
+  opacity: 0.85;
+  margin-bottom: 2rem;
+}
+
+.branding-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.branding-list li {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.branding-list li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  font-weight: bold;
+}
+
+.register-form-panel {
+  flex: 1;
+  padding: 2rem 2.5rem;
+  overflow-y: auto;
+  max-height: 90vh;
+}
+
+.register-form-wrapper h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: 0.25rem;
+}
+
+.register-subtitle {
+  font-size: 0.875rem;
+  color: var(--gray-500);
+  margin-bottom: 1.25rem;
+}
+
+/* Type toggle */
+.type-toggle {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.type-btn {
+  flex: 1;
+  padding: 0.625rem;
+  border: 2px solid var(--gray-200);
+  border-radius: var(--border-radius);
+  background: #fff;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--gray-600);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.type-btn:hover {
+  border-color: var(--primary-light);
+}
+
+.type-btn.active {
+  border-color: var(--primary);
+  background: var(--primary-50);
+  color: var(--primary);
+}
+
+/* Form row */
+.form-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+.form-hint {
+  font-size: 0.75rem;
+  color: var(--gray-400);
+  margin-top: 0.25rem;
+}
+
+.register-footer {
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--gray-500);
+  margin-top: 1.25rem;
+}
+
+.register-footer a {
+  color: var(--primary);
+  font-weight: 500;
+}
+
+@media (max-width: 700px) {
+  .register-container {
+    flex-direction: column;
+  }
+
+  .register-branding {
+    flex: none;
+    padding: 1.5rem;
+  }
+
+  .branding-list {
+    display: none;
+  }
+
+  .register-form-panel {
+    padding: 1.5rem;
+    max-height: none;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+}

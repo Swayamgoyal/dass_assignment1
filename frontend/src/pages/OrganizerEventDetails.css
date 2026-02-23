@@ -1,0 +1,68 @@
+.event-detail-badges {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.375rem;
+}
+
+.status-actions-bar {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  padding: 1rem;
+  background: #fff;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--border-radius-lg);
+}
+
+.quick-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1rem;
+}
+
+.detail-rows {
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0.625rem 0;
+  border-bottom: 1px solid var(--gray-100);
+  gap: 1rem;
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  font-size: 0.8125rem;
+  color: var(--gray-500);
+  font-weight: 500;
+  flex-shrink: 0;
+  min-width: 130px;
+}
+
+.detail-value {
+  font-size: 0.875rem;
+  color: var(--gray-800);
+  text-align: right;
+  word-break: break-word;
+}
+
+.review-field-opts {
+  font-size: 0.75rem;
+  color: var(--gray-400);
+  margin-left: 0.5rem;
+}

@@ -1,0 +1,27 @@
+.breadcrumb-link {
+  font-size: 0.8125rem;
+  color: var(--gray-400);
+  margin-top: 0.25rem;
+  display: inline-block;
+}
+
+.breadcrumb-link:hover {
+  color: var(--primary);
+}
+
+.ticket-code {
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  background: var(--gray-100);
+  padding: 0.125rem 0.375rem;
+  border-radius: var(--border-radius-sm);
+  color: var(--gray-600);
+}
+
+.filters-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}

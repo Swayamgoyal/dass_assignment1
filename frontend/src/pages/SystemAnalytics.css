@@ -1,0 +1,57 @@
+.sa-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 1rem;
+}
+
+.sa-bar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.25rem 0;
+}
+
+.sa-bar-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.sa-bar-label {
+  font-size: 0.75rem;
+  color: var(--gray-500);
+  font-weight: 500;
+}
+
+.sa-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sa-mini-bar {
+  height: 10px;
+  border-radius: 999px;
+  min-width: 4px;
+  transition: width 0.5s ease;
+}
+
+.sa-bar-row span {
+  font-size: 0.75rem;
+  color: var(--gray-700);
+  font-weight: 600;
+}
+
+.sa-empty {
+  font-size: 0.8125rem;
+  color: var(--gray-400);
+  padding: 1rem 0;
+  text-align: center;
+}
+
+.sa-performers {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}

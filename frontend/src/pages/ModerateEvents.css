@@ -1,0 +1,35 @@
+.mod-controls {
+  margin-bottom: 1rem;
+}
+
+.mod-filters {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin-top: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.mod-filters .form-input {
+  max-width: 160px;
+  font-size: 0.8125rem;
+  padding: 0.375rem 0.5rem;
+}
+
+.row-flagged {
+  background: #fef2f2;
+}
+
+.event-name-cell {
+  font-weight: 600;
+  color: var(--gray-800);
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.action-btns {
+  display: flex;
+  gap: 0.375rem;
+}

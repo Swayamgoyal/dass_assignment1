@@ -1,0 +1,31 @@
+.unauthorized-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gray-100);
+}
+
+.unauthorized-card {
+  text-align: center;
+  background: #fff;
+  padding: 3rem;
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.unauthorized-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.unauthorized-card h1 {
+  font-size: 1.5rem;
+  color: var(--gray-800);
+  margin-bottom: 0.5rem;
+}
+
+.unauthorized-card p {
+  color: var(--gray-500);
+  margin-bottom: 1.5rem;
+}

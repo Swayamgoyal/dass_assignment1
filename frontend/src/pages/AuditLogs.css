@@ -1,0 +1,56 @@
+.audit-filters {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.audit-filters .form-input {
+  max-width: 200px;
+  font-size: 0.8125rem;
+  padding: 0.375rem 0.5rem;
+}
+
+.audit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.audit-item {
+  padding: 0.75rem 1rem;
+}
+
+.audit-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.375rem;
+}
+
+.audit-time {
+  font-size: 0.75rem;
+  color: var(--gray-400);
+}
+
+.audit-item-body {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  font-size: 0.8125rem;
+}
+
+.audit-target {
+  color: var(--gray-700);
+}
+
+.audit-admin {
+  color: var(--gray-500);
+  font-style: italic;
+}
+
+.audit-details {
+  color: var(--gray-400);
+  font-size: 0.75rem;
+  width: 100%;
+  word-break: break-all;
+}
