@@ -1,2 +1,2 @@
-Frontend URL: [To be added after deployment]
-Backend URL: [To be added after deployment]
+Frontend URL: https://dass-assignment1-eosin.vercel.app
+Backend URL: https://dass-assignment1-vcqs.onrender.com
