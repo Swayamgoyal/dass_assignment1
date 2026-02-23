@@ -58,8 +58,8 @@ const registrationSchema = new mongoose.Schema({
     // Ticket Information
     ticketId: {
         type: String,
-        unique: true,
-        required: true
+        unique: true
+        // Note: Auto-generated in pre-save hook
     },
     qrCode: {
         type: String // Will store base64 encoded QR code or URL
