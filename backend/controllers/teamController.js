@@ -16,7 +16,15 @@ const createTeam = async (req, res) => {
 
         // Verify event exists and is a team event
         const event = await Event.findById(eventId);
-        if (!event || !event.isTeamEvent) {
+        if (!event) {
+            return res.status(404).json({
+                success: false,
+                message: 'Event not found'
+            });
+        }
+
+        // Check if event supports team registration (either isTeamEvent flag or maxTeamSize > 1)
+        if (!event.isTeamEvent && (!event.maxTeamSize || event.maxTeamSize <= 1)) {
             return res.status(400).json({
                 success: false,
                 message: 'Event does not support team registration'

@@ -16,6 +16,11 @@ const createEvent = async (req, res) => {
             status: 'Draft'
         };
 
+        // Auto-set isTeamEvent if maxTeamSize > 1
+        if (eventData.maxTeamSize && eventData.maxTeamSize > 1) {
+            eventData.isTeamEvent = true;
+        }
+
         // Validate event type specific data
         if (eventData.eventType === 'Normal' && !eventData.customForm) {
             eventData.customForm = [];
@@ -129,6 +134,14 @@ const updateEvent = async (req, res) => {
         // Draft status: allow all updates
         if (event.status === 'Draft') {
             Object.assign(event, updates);
+            
+            // Auto-set isTeamEvent if maxTeamSize > 1
+            if (event.maxTeamSize && event.maxTeamSize > 1) {
+                event.isTeamEvent = true;
+            } else if (event.maxTeamSize === 1) {
+                event.isTeamEvent = false;
+            }
+            
             await event.save();
 
             return res.status(200).json({

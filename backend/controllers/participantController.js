@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Participant = require('../models/Participant');
 const Event = require('../models/Event');
 const Registration = require('../models/Registration');
+const Team = require('../models/Team');
 const Organizer = require('../models/Organizer');
 const bcrypt = require('bcrypt');
 
@@ -28,6 +29,34 @@ const getDashboard = async (req, res) => {
 
         // Filter out null events (where match failed)
         const upcomingEvents = upcomingRegistrations.filter(reg => reg.eventId !== null);
+
+        // Also get team events where participant is a member
+        const teamEvents = await Team.find({
+            'members.participantId': participantId,
+            'members.status': { $in: ['pending', 'accepted'] }
+        })
+            .populate({
+                path: 'eventId',
+                match: { eventEndDate: { $gte: now } },
+                populate: { path: 'organizerId', select: 'organizerName' }
+            })
+            .sort({ createdAt: -1 });
+
+        // Add team events to upcoming (format them like registrations)
+        const formattedTeamEvents = teamEvents
+            .filter(team => team.eventId !== null)
+            .map(team => ({
+                _id: team._id,
+                eventId: team.eventId,
+                registrationType: 'Team',
+                teamId: team._id,
+                teamName: team.teamName,
+                registrationStatus: team.registrationStatus,
+                status: 'Active'
+            }));
+
+        // Combine both lists
+        const allUpcomingEvents = [...upcomingEvents, ...formattedTeamEvents];
 
         // Get stats
         const totalRegistrations = await Registration.countDocuments({
@@ -77,11 +106,11 @@ const getDashboard = async (req, res) => {
         res.status(200).json({
             success: true,
             data: {
-                upcomingEvents,
+                upcomingEvents: allUpcomingEvents,
                 stats: {
                     totalRegistrations,
                     totalSpent: totalSpent.length > 0 ? totalSpent[0].total : 0,
-                    upcomingCount: upcomingEvents.length
+                    upcomingCount: allUpcomingEvents.length
                 }
             }
         });
