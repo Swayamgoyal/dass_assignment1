@@ -156,19 +156,39 @@ const updateEvent = async (req, res) => {
             const allowedFields = ['eventDescription', 'eventTags', 'registrationDeadline', 'registrationLimit', 'eventEndDate'];
             const updateKeys = Object.keys(updates);
 
-            const invalidFields = updateKeys.filter(key => !allowedFields.includes(key));
+            // Allow updating merchandise stock and price for Merchandise events
+            if (event.eventType === 'Merchandise' && updates.merchandiseDetails) {
+                // Only allow updating stock and price, not structure
+                if (updates.merchandiseDetails.variants) {
+                    const existingVariants = event.merchandiseDetails.variants;
+                    const updatedVariants = updates.merchandiseDetails.variants;
+                    
+                    // Ensure same number of variants (no adding/removing)
+                    if (existingVariants.length !== updatedVariants.length) {
+                        return res.status(400).json({
+                            success: false,
+                            message: 'Cannot add or remove merchandise variants after publishing'
+                        });
+                    }
+                    
+                    // Update only stock and price for each variant
+                    existingVariants.forEach((variant, index) => {
+                        if (updatedVariants[index]) {
+                            variant.stock = updatedVariants[index].stock ?? variant.stock;
+                            variant.price = updatedVariants[index].price ?? variant.price;
+                        }
+                    });
+                }
+                
+                // Remove merchandiseDetails from updates to avoid the validation error
+                delete updates.merchandiseDetails;
+            }
+
+            const invalidFields = updateKeys.filter(key => !allowedFields.includes(key) && key !== 'merchandiseDetails');
             if (invalidFields.length > 0) {
                 return res.status(400).json({
                     success: false,
                     message: `Cannot update these fields after publishing: ${invalidFields.join(', ')}`
-                });
-            }
-
-            // Only allow extending deadline (not shortening)
-            if (updates.registrationDeadline && new Date(updates.registrationDeadline) < new Date(event.registrationDeadline)) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Can only extend the registration deadline, not shorten it'
                 });
             }
 

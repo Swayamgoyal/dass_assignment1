@@ -365,24 +365,39 @@ const scanQRCode = async (req, res) => {
         const { qrData } = req.body;
         const organizerId = req.user.userId;
 
+        console.log('Scan attempt:', { qrData, organizerId });
+
         if (!qrData) {
             return res.status(400).json({ success: false, message: 'QR code data is required' });
         }
 
-        const decoded = verifyQRCode(qrData);
-        if (!decoded) {
-            return res.status(400).json({ success: false, message: 'Invalid QR code' });
+        // Try to parse as JSON (QR code scan) or use as plain ticket ID (manual entry)
+        let ticketId;
+        try {
+            const decoded = verifyQRCode(qrData);
+            ticketId = decoded.ticketId;
+            console.log('Parsed ticketId from QR JSON:', ticketId);
+        } catch {
+            // If not JSON, assume it's a plain ticket ID from manual entry
+            ticketId = qrData.trim();
+            console.log('Using plain ticketId:', ticketId);
         }
 
-        const { ticketId } = decoded;
+        if (!ticketId) {
+            return res.status(400).json({ success: false, message: 'Invalid ticket data' });
+        }
 
         const registration = await Registration.findOne({ ticketId })
             .populate('participantId', 'firstName lastName email collegeId')
             .populate('eventId', 'eventName organizerId');
 
+        console.log('Registration found:', !!registration);
+
         if (!registration) {
             return res.status(404).json({ success: false, message: 'Ticket not found' });
         }
+
+        console.log('Event organizer:', registration.eventId.organizerId.toString(), 'Scanner organizer:', organizerId);
 
         if (registration.eventId.organizerId.toString() !== organizerId) {
             return res.status(403).json({ success: false, message: 'This ticket does not belong to your event' });

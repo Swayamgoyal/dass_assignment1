@@ -239,7 +239,23 @@ export default function CreateEvent() {
       }
 
       if (isEdit) {
-        await eventAPI.update(eventId, payload)
+        // For published events, only send allowed fields
+        if (isPublished) {
+          const allowedPayload = {
+            eventDescription: payload.eventDescription,
+            eventTags: payload.eventTags,
+            registrationDeadline: payload.registrationDeadline,
+            registrationLimit: payload.registrationLimit,
+            eventEndDate: payload.eventEndDate,
+          }
+          // Allow merchandise stock/price updates
+          if (payload.merchandiseDetails) {
+            allowedPayload.merchandiseDetails = payload.merchandiseDetails
+          }
+          await eventAPI.update(eventId, allowedPayload)
+        } else {
+          await eventAPI.update(eventId, payload)
+        }
       } else {
         await eventAPI.create(payload)
       }

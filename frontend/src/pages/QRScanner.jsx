@@ -108,7 +108,8 @@ export default function QRScanner() {
       ])
       setQrInput('')
     } catch (err) {
-      const msg = err.response?.data?.message || 'Scan failed'
+      console.error('QR Scan Error:', err.response || err)
+      const msg = err.response?.data?.message || err.message || 'Scan failed'
       const alreadyMarked = msg.toLowerCase().includes('already marked')
       setResult({
         success: false,

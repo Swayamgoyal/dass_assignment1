@@ -30,6 +30,11 @@ const getDashboard = async (req, res) => {
         // Filter out null events (where match failed)
         const upcomingEvents = upcomingRegistrations.filter(reg => reg.eventId !== null);
 
+        // Get event IDs that already have registrations (to avoid duplicates)
+        const registeredEventIds = new Set(
+            upcomingEvents.map(reg => reg.eventId._id.toString())
+        );
+
         // Also get team events where participant is a member
         const teamEvents = await Team.find({
             'members.participantId': participantId,
@@ -42,9 +47,11 @@ const getDashboard = async (req, res) => {
             })
             .sort({ createdAt: -1 });
 
-        // Add team events to upcoming (format them like registrations)
+        // Add team events to upcoming ONLY if not already registered
+        // (Format them like registrations)
         const formattedTeamEvents = teamEvents
             .filter(team => team.eventId !== null)
+            .filter(team => !registeredEventIds.has(team.eventId._id.toString()))
             .map(team => ({
                 _id: team._id,
                 eventId: team.eventId,
@@ -55,7 +62,7 @@ const getDashboard = async (req, res) => {
                 status: 'Active'
             }));
 
-        // Combine both lists
+        // Combine both lists (no duplicates now)
         const allUpcomingEvents = [...upcomingEvents, ...formattedTeamEvents];
 
         // Get stats
