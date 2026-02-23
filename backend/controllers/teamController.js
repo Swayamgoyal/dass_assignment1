@@ -89,6 +89,35 @@ const createTeam = async (req, res) => {
 
         await team.save();
 
+        // Create registration for team leader immediately
+        try {
+            const participant = await Participant.findById(participantId);
+            const registration = new Registration({
+                eventId,
+                participantId,
+                teamId: team._id,
+                registrationType: 'Normal',
+                status: 'Active',
+                paymentStatus: event.registrationFee > 0 ? 'Pending' : 'Completed'
+            });
+            await registration.save();
+
+            // Generate QR code for the ticket
+            try {
+                const qrCode = await generateQRCode(
+                    registration.ticketId,
+                    event,
+                    participant
+                );
+                registration.qrCode = qrCode;
+                await registration.save();
+            } catch (qrErr) {
+                console.error('QR generation failed:', qrErr);
+            }
+        } catch (regErr) {
+            console.error('Team leader registration error:', regErr);
+        }
+
         res.status(201).json({
             success: true,
             message: 'Team created successfully',
@@ -172,52 +201,49 @@ const joinTeam = async (req, res) => {
 
         await team.save();
 
-        // Auto-register all team members when team becomes complete
-        if (team.registrationStatus === 'complete') {
-            try {
-                const event = team.eventId;
-                for (const member of currentAccepted) {
-                    const existing = await Registration.findOne({
-                        eventId: event._id,
-                        participantId: member.participantId,
-                        status: 'Active'
-                    });
-                    if (existing) continue;
+        // Create registration for the new member immediately
+        try {
+            const event = team.eventId;
+            const existing = await Registration.findOne({
+                eventId: event._id,
+                participantId: participantId,
+                status: 'Active'
+            });
+            
+            if (!existing) {
+                const participant = await Participant.findById(participantId);
+                const registration = new Registration({
+                    eventId: event._id,
+                    participantId: participantId,
+                    teamId: team._id,
+                    registrationType: 'Normal',
+                    status: 'Active',
+                    paymentStatus: event.registrationFee > 0 ? 'Pending' : 'Completed'
+                });
+                await registration.save();
 
-                    const participant = await Participant.findById(member.participantId);
-                    const registration = new Registration({
-                        eventId: event._id,
-                        participantId: member.participantId,
-                        teamId: team._id,
-                        registrationType: 'Normal',
-                        status: 'Active',
-                        paymentStatus: event.registrationFee > 0 ? 'Pending' : 'Completed'
-                    });
+                // Generate QR code for the ticket
+                try {
+                    const qrCode = await generateQRCode(
+                        registration.ticketId,
+                        event,
+                        participant
+                    );
+                    registration.qrCode = qrCode;
                     await registration.save();
-
-                    // Generate QR code for the ticket
-                    try {
-                        const qrCode = await generateQRCode(
-                            registration.ticketId,
-                            event,
-                            participant
-                        );
-                        registration.qrCode = qrCode;
-                        await registration.save();
-                    } catch (qrErr) {
-                        console.error('QR generation failed for member:', member.participantId, qrErr);
-                    }
+                } catch (qrErr) {
+                    console.error('QR generation failed:', qrErr);
                 }
-            } catch (regErr) {
-                console.error('Auto-registration error:', regErr);
             }
+        } catch (regErr) {
+            console.error('Member registration error:', regErr);
         }
 
         res.status(200).json({
             success: true,
             message: team.registrationStatus === 'complete'
-                ? 'Team complete! All members have been registered for the event.'
-                : 'Successfully joined the team',
+                ? 'Team complete! All members are registered for the event.'
+                : 'Successfully joined the team. You are now registered for the event.',
             data: team
         });
     } catch (error) {
