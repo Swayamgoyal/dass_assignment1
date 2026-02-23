@@ -263,7 +263,7 @@ export default function EventDetails() {
                 <div className="ed-blocked">Event is full</div>
               ) : event.status === 'Published' || event.status === 'Ongoing' ? (
                 event.isTeamEvent ? (
-                  <button className="btn btn-primary" style={{ width: '100%' }} onClick={() => navigate('/my-teams')}>
+                  <button className="btn btn-primary" style={{ width: '100%' }} onClick={() => navigate(`/my-teams?eventId=${eventId}`)}>
                     👥 Form / Join a Team
                   </button>
                 ) : (

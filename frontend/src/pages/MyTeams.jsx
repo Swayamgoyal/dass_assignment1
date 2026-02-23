@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import ParticipantNav from '../components/ParticipantNav'
 import { teamAPI } from '../services/api'
 import './MyTeams.css'
 
 export default function MyTeams() {
+  const [searchParams] = useSearchParams()
   const [teams, setTeams] = useState([])
   const [loading, setLoading] = useState(true)
   const [msg, setMsg] = useState({ type: '', text: '' })
@@ -22,7 +23,14 @@ export default function MyTeams() {
 
   useEffect(() => {
     loadTeams()
-  }, [])
+    
+    // Auto-fill event ID from URL params
+    const eventIdParam = searchParams.get('eventId')
+    if (eventIdParam) {
+      setCreateForm(prev => ({ ...prev, eventId: eventIdParam }))
+      setShowCreate(true)
+    }
+  }, [searchParams])
 
   const loadTeams = async () => {
     try {

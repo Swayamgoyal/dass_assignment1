@@ -14,8 +14,23 @@ const createTeam = async (req, res) => {
         const { eventId, teamName, teamSize } = req.body;
         const participantId = req.user.userId;
 
+        console.log('=== CREATE TEAM REQUEST ===');
+        console.log('Event ID:', eventId);
+        console.log('Team Name:', teamName);
+        console.log('Team Size:', teamSize);
+        console.log('Participant ID:', participantId);
+
         // Verify event exists and is a team event
         const event = await Event.findById(eventId);
+        console.log('Event found:', event ? 'YES' : 'NO');
+        if (event) {
+            console.log('Event details:', {
+                name: event.eventName,
+                isTeamEvent: event.isTeamEvent,
+                maxTeamSize: event.maxTeamSize
+            });
+        }
+
         if (!event) {
             return res.status(404).json({
                 success: false,
@@ -25,11 +40,14 @@ const createTeam = async (req, res) => {
 
         // Check if event supports team registration (either isTeamEvent flag or maxTeamSize > 1)
         if (!event.isTeamEvent && (!event.maxTeamSize || event.maxTeamSize <= 1)) {
+            console.log('❌ Event does not support teams');
             return res.status(400).json({
                 success: false,
-                message: 'Event does not support team registration'
+                message: `Event "${event.eventName}" does not support team registration. isTeamEvent=${event.isTeamEvent}, maxTeamSize=${event.maxTeamSize}`
             });
         }
+
+        console.log('✅ Event supports teams');
 
         // Check if participant already has a team for this event
         const existingTeam = await Team.findOne({
