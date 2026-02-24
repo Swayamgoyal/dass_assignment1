@@ -3,6 +3,7 @@ const Event = require('../models/Event');
 const Participant = require('../models/Participant');
 const Registration = require('../models/Registration');
 const { generateQRCode } = require('../utils/qrGenerator');
+const { sendRegistrationEmail } = require('../utils/emailService');
 const crypto = require('crypto');
 
 /**
@@ -113,6 +114,13 @@ const createTeam = async (req, res) => {
                 await registration.save();
             } catch (qrErr) {
                 console.error('QR generation failed:', qrErr);
+            }
+
+            // Send confirmation email
+            try {
+                await sendRegistrationEmail(participant, event, registration, team);
+            } catch (emailErr) {
+                console.error('Email sending failed:', emailErr);
             }
         } catch (regErr) {
             console.error('Team leader registration error:', regErr);
@@ -233,6 +241,13 @@ const joinTeam = async (req, res) => {
                     await registration.save();
                 } catch (qrErr) {
                     console.error('QR generation failed:', qrErr);
+                }
+
+                // Send confirmation email
+                try {
+                    await sendRegistrationEmail(participant, event, registration, team);
+                } catch (emailErr) {
+                    console.error('Email sending failed:', emailErr);
                 }
             }
         } catch (regErr) {

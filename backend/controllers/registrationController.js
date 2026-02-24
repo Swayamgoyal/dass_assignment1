@@ -3,7 +3,7 @@ const Event = require('../models/Event');
 const Registration = require('../models/Registration');
 const Participant = require('../models/Participant');
 const { generateQRCode } = require('../utils/qrGenerator');
-const nodemailer = require('nodemailer');
+const { sendRegistrationEmail } = require('../utils/emailService');
 
 /**
  * Register for an event
@@ -193,7 +193,7 @@ const registerForEvent = async (req, res) => {
 
         // Send confirmation email
         try {
-            await sendConfirmationEmail(participant, event, registration);
+            await sendRegistrationEmail(participant, event, registration);
         } catch (emailError) {
             console.error('Email sending failed:', emailError);
             // Don't fail registration if email fails
@@ -316,54 +316,7 @@ const cancelRegistration = async (req, res) => {
 /**
  * Send confirmation email
  */
-const sendConfirmationEmail = async (participant, event, registration) => {
-    // Create transporter
-    const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS
-        }
-    });
 
-    const eventType = event.eventType === 'Normal' ? 'Event' : 'Merchandise';
-
-    const mailOptions = {
-        from: process.env.EMAIL_USER,
-        to: participant.email,
-        subject: `Registration Confirmed - ${event.eventName}`,
-        html: `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h2 style="color: #667eea;">Registration Confirmed!</h2>
-        <p>Dear ${participant.firstName} ${participant.lastName},</p>
-        <p>Your registration for <strong>${event.eventName}</strong> has been confirmed.</p>
-        
-        <div style="background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
-          <h3 style="margin-top: 0;">Event Details</h3>
-          <p><strong>Event:</strong> ${event.eventName}</p>
-          <p><strong>Type:</strong> ${eventType}</p>
-          <p><strong>Date:</strong> ${new Date(event.eventStartDate).toLocaleDateString()}</p>
-          <p><strong>Time:</strong> ${new Date(event.eventStartDate).toLocaleTimeString()}</p>
-          ${event.eventType === 'Merchandise' ? `<p><strong>Variant:</strong> ${registration.merchandiseVariant.size} - ${registration.merchandiseVariant.color}</p>` : ''}
-        </div>
-        
-        <div style="background: #e8f4f8; padding: 20px; border-radius: 8px; margin: 20px 0;">
-          <h3 style="margin-top: 0;">Your Ticket</h3>
-          <p><strong>Ticket ID:</strong> <span style="font-size: 1.2em; color: #667eea;">${registration.ticketId}</span></p>
-          <p>Please save this ticket ID. You can view your ticket anytime in your dashboard.</p>
-          <p><a href="${process.env.FRONTEND_URL}/tickets/${registration.ticketId}" style="background: #667eea; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; margin-top: 10px;">View Ticket</a></p>
-        </div>
-        
-        <p>If you have any questions, please contact the organizer at ${event.organizerId.contactEmail}.</p>
-        
-        <p>See you at the event!</p>
-        <p><em>- Felicity Team</em></p>
-      </div>
-    `
-    };
-
-    await transporter.sendMail(mailOptions);
-};
 
 module.exports = {
     registerForEvent,
