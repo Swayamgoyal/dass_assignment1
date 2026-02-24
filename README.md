@@ -1,437 +1,434 @@
-# Felicity Event Management System
+﻿# Felicity Event Management System
 
 A comprehensive event management system built with the MERN stack for managing college fest events, clubs, and participants.
 
-**DASS Assignment 1** | [Live Demo](https://dass-assignment1-eosin.vercel.app) | [GitHub](https://github.com/Swayamgoyal/dass_assignment1)
+## Libraries, Frameworks, and Modules Used
 
----
+### Backend Dependencies
 
-## Technology Stack
+Core Framework & Runtime
+- Node.js (v14+)
+  Justification: Enables JavaScript for backend development with excellent async I/O performance and non-blocking event loop for handling concurrent requests efficiently
+  
+- Express.js (v4.18+)
+  Justification: Minimal and flexible framework for building RESTful APIs with robust routing, middleware support, and extensive community ecosystem
 
-**MERN Stack**:
-- MongoDB (Atlas) - Database
-- Express.js - Backend API
-- React (Vite) - Frontend
-- Node.js - Runtime
+Database & ODM
+- MongoDB
+  Justification: NoSQL document database with flexible schema design perfect for event management with varying attributes. Provides easy horizontal scaling and natural JSON-like document structure matching JavaScript objects
+  
+- Mongoose (v7.0+)
+  Justification: ODM layer providing schema validation, type casting, query building, and business logic hooks. Simplifies database operations and enforces data consistency
 
-**Key Libraries**: JWT authentication, Socket.io (real-time chat), Nodemailer (emails), QR code generation, Redux Toolkit, html5-qrcode
+Authentication & Security
+- jsonwebtoken (JWT)
+  Justification: Stateless token-based authentication enabling secure session management across distributed systems without server-side session storage. Scalable for microservices architecture
+  
+- bcryptjs
+  Justification: Industry-standard password hashing with configurable salt rounds. Provides protection against rainbow table attacks and brute-force attempts
 
----
+Real-time Communication
+- Socket.io (v4.6+)
+  Justification: Enables real-time bidirectional communication for team chat with automatic fallback to long-polling when WebSockets unavailable. Built-in room management for team-based communication
 
-## Features Implemented
+Email Service
+- Nodemailer (v6.9+)
+  Justification: Simple SMTP integration for sending registration confirmations and tickets. Supports various email providers with minimal configuration
 
-### Phase 1: Core System [70 Marks] ✅
-1. **Authentication & Security** (8) - JWT, bcrypt, role-based access (Admin/Organizer/Participant)
-2. **User Onboarding** (3) - Interest selection, club following
-3. **User Data Models** (2) - Participant & Organizer schemas
-4. **Event Types** (2) - Normal, Merchandise, Team events
-5. **Event Attributes** (2) - Dynamic forms, merchandise variants, dates, fees
-6. **Participant Features** (22) - Dashboard, browse/search/filter events, registration workflows, profile management, clubs listing
-7. **Organizer Features** (18) - Dashboard with analytics, event creation (draft→publish), custom form builder, registration management, CSV export, QR scanning
-8. **Admin Features** (6) - Club management, password reset workflow, audit logs
-9. **Deployment** (5) - Vercel (frontend) + Render (backend) + MongoDB Atlas
+File Handling & QR Codes
+- Multer
+  Justification: Middleware for handling multipart/form-data for file uploads including event images and custom form file fields. Memory-efficient streaming for large files
+  
+- qrcode
+  Justification: Generates unique QR codes for event tickets enabling contactless attendance tracking and quick check-ins
 
-### Phase 2: Advanced Features [30 Marks] ✅
+Data Export & Calendar
+- json2csv
+  Justification: Converts registration data to CSV format for organizers' offline analysis, record-keeping, and Excel compatibility
+  
+- ical-generator
+  Justification: Creates iCalendar (.ics) files for universal calendar integration with Google Calendar, Outlook, and Apple Calendar
 
-**Tier A (16 marks - 2 implemented)**:
-1. **Hackathon Team Registration** (8 marks) ✅
-   - Team creation with invite codes, member management, automatic registration for all members, QR tickets for each member, integrated chat
-   - **Justification**: Essential for hackathons and team events at college fests
+Environment & CORS
+- dotenv
+  Justification: Manages environment variables to keep sensitive credentials out of codebase and enable environment-specific configurations
+  
+- cors
+  Justification: Enables Cross-Origin Resource Sharing for secure API access from frontend hosted on different domain/port
 
-2. **QR Scanner & Attendance** (8 marks) ✅
-   - Camera-based scanning + manual entry, duplicate prevention, real-time history, attendance analytics
-   - **Justification**: Replaces manual verification, enables accurate attendance tracking
+### Frontend Dependencies
 
-**Tier B (12 marks - 2 implemented)**:
-3. **Team Chat** (6 marks) ✅
-   - Real-time messaging with Socket.io, typing indicators, online status, persistent message history
-   - **Justification**: Team coordination without external platforms
+Core Framework & Build Tool
+- React (v18+)
+  Justification: Component-based architecture with virtual DOM for efficient updates. Large ecosystem, reusable components, and excellent developer experience with hooks
+  
+- Vite (v5.4+)
+  Justification: Modern build tool offering lightning-fast Hot Module Replacement (HMR) and optimized production builds. Significantly faster than webpack for development
 
-4. **Password Reset Workflow** (6 marks) ✅
-   - Organizer requests → Admin approval → Auto-generated secure password
-   - **Justification**: Secure account recovery with admin oversight
+Routing & State Management
+- React Router (v6+)
+  Justification: Declarative client-side routing with nested routes, protected routes, and navigation guards. Essential for single-page application navigation
+  
+- Redux Toolkit
+  Justification: Centralized state management for user authentication and global app state. Simplifies Redux boilerplate with createSlice and includes Redux Thunk for async logic
 
-**Tier C (2 marks - 1 implemented)**:
-5. **Calendar Integration** (2 marks) ✅
-   - Download .ics files for Google Calendar, Outlook, Apple Calendar
-   - **Justification**: Reduces no-shows with calendar reminders
+HTTP Client
+- Axios
+  Justification: Promise-based HTTP client with interceptors for automatically adding auth tokens, automatic JSON transformation, and better error handling compared to fetch API
 
----
+QR Code Scanning
+- html5-qrcode
+  Justification: Browser-based QR code scanning using device camera without requiring native apps. Works across desktop and mobile devices
 
-## Installation & Setup
+UI Styling
+- Custom CSS
+  Justification: Provides complete design control, zero bundle bloat from unused components, enables custom branding, and offers learning opportunity for CSS skills
+
+## Advanced Features Implementation
+
+### Tier A Features (16 Marks)
+
+#### 1. Hackathon Team Registration (8 Marks)
+
+Feature Selection Justification:
+College fests increasingly focus on hackathons and team-based competitions. Traditional event management systems handle only individual registrations, creating coordination chaos for team events. This feature addresses a critical gap by providing seamless team formation and management with invite-based joining.
+
+Design Choices and Technical Decisions:
+- Invite Code System: Generated unique 8-character alphanumeric codes for team joining
+  Rationale: Reduces friction - team members can join independently without waiting for leader approval. Crypto-random generation ensures uniqueness and easy sharing via messaging apps
+  
+- Automatic Registration Creation: Each team member gets individual Registration record
+  Rationale: Maintains data consistency - team members appear in organizer's registration list and receive individual tickets. Created registration records on both team creation and member join to ensure atomicity
+
+- Individual QR Tickets: Each team member receives unique QR code
+  Rationale: Enables fair attendance tracking - individual contributions matter and prevents proxy attendance. Reused existing QR generation utility linked to individual registrations
+
+Implementation Approach:
+- Database Design: Team model with embedded members array containing participantId, joinedAt, and status fields
+- Transaction Handling: Used Mongoose transactions to ensure atomicity when creating team with simultaneous registration records
+- Email Integration: Centralized email service sends confirmations to all team members with team context
+- Validation: Backend prevents duplicate teams per event, enforces team size limits, and verifies event is team-type
+- Invite Code Management: Stored in Team model with database index for fast lookups
+- Dynamic Status: Team completion status calculated based on members.length vs maxSize
+- Cleanup: Team leader can delete team which cascades to all member registrations
+
+#### 2. QR Scanner and Attendance Tracking (8 Marks)
+
+Feature Selection Justification:
+Manual attendance verification at large events is time-consuming, error-prone, and creates bottlenecks. QR-based scanning provides instant verification and accurate analytics, modernizing event management similar to industry standards used in concerts and flights.
+
+Design Choices and Technical Decisions:
+- Dual Input Modes: Camera scanning plus manual ticket ID entry
+  Rationale: Provides fallback for camera failures, poor lighting, or damaged QR codes. Backend accepts both JSON QR data and plain ticket IDs using try-catch parsing
+
+- Duplicate Prevention: Clear error messaging when ticket already scanned
+  Rationale: Prevents attendance fraud and maintains data integrity. Checks hasAttended flag before marking attendance
+
+- Real-time Scan History: Display last 10 scans with success/error status
+  Rationale: Provides immediate feedback for organizers and helps identify scanning issues. Stored in frontend state (not database) as session-specific context
+
+- Event-Specific Scanning: Organizers can only scan tickets for their own events
+  Rationale: Security measure preventing cross-event attendance marking and maintaining data privacy. Backend verifies ticket's eventId matches organizer's event
+
+Implementation Approach:
+- Frontend: html5-qrcode library provides camera access with auto-scan capabilities
+  Challenge: Handling camera permissions across different browsers
+  Solution: Graceful error handling with fallback to manual entry mode
+  
+- Backend Validation Pipeline:
+  1. Parse QR data (JSON or plain string)
+  2. Find registration by ticketId
+  3. Verify registration exists and matches eventId
+  4. Check hasAttended flag to prevent duplicates
+  5. Update registration with attendance timestamp
+
+- Attendance Timestamp: Stores actual time (not just boolean) for analytics on peak entry times
+- Visual Confirmation: Returns participant info on successful scan for organizer verification
+- UI Mode Toggle: Camera/Manual switch in single page for better user experience
+
+### Tier B Features (12 Marks)
+
+#### 3. Team Chat (6 Marks)
+
+Feature Selection Justification:
+Hackathon teams require constant communication during events. Forcing teams to exchange phone numbers and use external platforms like WhatsApp creates friction and privacy concerns. Integrated chat keeps all event-related communication centralized and provides better context through team registration status visibility.
+
+Design Choices and Technical Decisions:
+- Socket.io for Real-time Communication: WebSocket-based messaging instead of polling
+  Rationale: Delivers true real-time experience with efficient bandwidth usage and automatic reconnection. Socket.io chosen over raw WebSockets for built-in fallback support and room management
+
+- Persistent Message History: Messages stored in TeamMessage database model
+  Rationale: Late-joining members can see discussion context which is critical for asynchronous communication across time zones
+
+- Typing Indicators: Display "X is typing..." when team members type
+  Rationale: Creates conversational feel, prevents message collisions, and provides modern chat UX. Emit typing events on input change with 500ms debouncing
+
+- Online Status Indicators: Green dot next to online team members
+  Rationale: Team leaders can identify who's available for immediate discussion. Tracks socket connections per team room and emits online users list on join/leave events
+
+Implementation Approach:
+- Backend Socket Architecture:
+  - JWT authentication middleware validates socket connections
+  - Room-based design (one room per team using team._id as room identifier)
+  - Event handlers: join-team, send-message, typing, disconnect
+  
+- Frontend Integration:
+  - Socket connection initialized in TeamChat component
+  - useEffect hooks for message listeners and cleanup
+  - Auto-scroll to latest message on new message receipt
+  - Proper socket cleanup on component unmount
+
+- Message Storage: Stores sender's name in message document to avoid extra database joins
+- Broadcasting: Emits to entire room (not broadcast) to include sender in updates
+- Security: Validates team membership before allowing join-team socket event
+
+#### 4. Organizer Password Reset Workflow (6 Marks)
+
+Feature Selection Justification:
+Organizers are long-term users who inevitably forget passwords. Allowing self-service resets without oversight poses security risks since club accounts could be hijacked. This workflow balances user convenience with security through admin verification, especially important since organizers manage sensitive operations like merchandise sales and registrations.
+
+Design Choices and Technical Decisions:
+- Admin Approval Required: Reset requests routed to admin dashboard for manual approval
+  Rationale: Organizers manage sensitive operations and need identity verification. Better than email-based reset since organizers often use shared club email accounts
+
+- Auto-generated Secure Passwords: System generates passwords on approval using Crypto.randomBytes
+  Rationale: Prevents weak passwords and removes burden from admin. Generates 16-character passwords with symbols meeting security requirements
+
+- Request Reason Mandatory: Organizer must provide reason for password reset
+  Rationale: Helps admin detect suspicious activity and provides audit trail. Stored in PasswordResetRequest model for future reference
+
+- Single Pending Request Limit: Prevents multiple simultaneous reset requests
+  Rationale: Prevents admin dashboard flooding and indicates potential compromised account if multiple requests attempted
+
+Implementation Approach:
+- Database Model: PasswordResetRequest with status (pending/approved/rejected), reason, and requestDate fields
+- Admin Workflow:
+  1. View all pending/historical requests on dashboard
+  2. Approve or reject with optional comments
+  3. On approval: generate secure password, hash with bcrypt, update organizer record, display password to admin for communication
+  
+- Security: New passwords use same bcrypt hashing as registration (cost factor 10)
+- Audit Trail: Request history preserved (not deleted on approval) for security auditing
+- Rejection Handling: Admin can provide reason for rejection which is communicated to organizer
+- UI Status Indicators: Color-coded badges (Pending=yellow, Approved=green, Rejected=red) for quick scanning
+
+### Tier C Features (2 Marks)
+
+#### 5. Calendar Integration (2 Marks)
+
+Feature Selection Justification:
+Participants register for multiple events and often forget dates leading to no-shows. Calendar integration enables automatic reminders via users' existing calendar applications. Universal .ics format provides compatibility across all major platforms (Google Calendar, Apple Calendar, Outlook, mobile calendars).
+
+Design Choices and Technical Decisions:
+- .ics File Generation: Server-side generation using ical-generator library
+  Rationale: Universal compatibility across all calendar platforms, no API keys required, works offline. Library handles complex iCalendar format specifications
+
+- On-Demand Generation: Backend endpoint /api/events/:eventId/calendar generates file per request
+  Rationale: Avoids storing static .ics files, generates with latest event data ensuring accuracy
+
+- Timezone Handling: Convert UTC database times to IST (India Standard Time)
+  Rationale: Events are in India, users expect local times in calendar entries
+
+Implementation Approach:
+- Backend Route: GET /api/events/:eventId/calendar
+  1. Fetch event details from database
+  2. Create calendar using ical-generator
+  3. Add event with start/end times, location, description
+  4. Set organizer contact information
+  5. Return with Content-Type: text/calendar header
+  
+- Frontend Integration: Download button on event details page triggers GET request with automatic file download
+
+- Event Details Included: Description, organizer contact info added to calendar entry for participant reference
+- Reminder Configuration: Sets alarm/reminder 1 day before event start time
+- File Naming: Format {eventName}.ics for clarity in user's downloads folder
+
+## Setup and Installation Instructions
 
 ### Prerequisites
-- Node.js v14+, npm v6+
-- MongoDB Atlas account
+1. Node.js (v14.0.0 or higher) - Download from https://nodejs.org/
+2. npm (v6.0.0 or higher) - Included with Node.js installation
+3. MongoDB Atlas Account - Sign up at https://www.mongodb.com/cloud/atlas
+4. Gmail Account (Optional) - Required for email notifications
 
-### Quick Start
+### Step 1: Clone Repository
 ```bash
-# Backend
-cd backend
-npm install
-# Create .env file (see below)
-npm run dev
-
-# Frontend
-cd frontend
-npm install
-npm run dev
+git clone https://github.com/Swayamgoyal/dass_assignment1.git
+cd dass_assignment1
 ```
 
-### Environment Variables
+### Step 2: Backend Setup
 
-**Backend (.env)**:
+Install Dependencies:
+```bash
+cd backend
+npm install
+```
+
+Configure Environment Variables:
+Create a .env file in the backend/ directory with the following content:
+
 ```env
-MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/felicity
-JWT_SECRET=your_secret_key
+# Database Connection
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/felicity?retryWrites=true&w=majority
+
+# JWT Secret (use strong random string - minimum 32 characters)
+JWT_SECRET=your_super_secret_jwt_key_here_min_32_characters
+
+# Server Configuration
 PORT=5000
+NODE_ENV=development
+
+# Email Configuration (Optional - application functions without it)
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USER=your_email@gmail.com
+EMAIL_PASS=your_16_char_app_password
+
+# Admin Credentials (auto-seeded on first startup)
 ADMIN_EMAIL=admin@felicity.iiit.ac.in
 ADMIN_PASSWORD=Admin@123
-EMAIL_USER=your_email@gmail.com  # Optional
-EMAIL_PASS=your_app_password     # Optional
+
+# Frontend URL (for CORS configuration)
 FRONTEND_URL=http://localhost:3000
 ```
 
-**Frontend (.env)** (optional for local dev):
+MongoDB Atlas Configuration Steps:
+1. Create a new cluster on MongoDB Atlas
+2. Create a database user with read/write permissions
+3. Whitelist IP address (use 0.0.0.0/0 for development)
+4. Navigate to "Connect" then "Connect your application"
+5. Copy connection string and replace username, password, and database name in MONGODB_URI
+
+Gmail App Password Setup (Optional, for email notifications):
+1. Enable 2-factor authentication on your Gmail account
+2. Navigate to Security settings then App passwords
+3. Generate a new app password for "Mail"
+4. Use the generated 16-character password in EMAIL_PASS variable
+
+Start Backend Server:
+```bash
+npm run dev
+```
+
+Backend server will start on http://localhost:5000
+Admin account is automatically seeded on first run with credentials from .env file
+
+### Step 3: Frontend Setup
+
+Install Dependencies:
+```bash
+cd ../frontend
+npm install
+```
+
+Configure Environment Variables (Optional):
+Create a .env file in the frontend/ directory:
+
 ```env
+# Backend API URL
 VITE_API_URL=http://localhost:5000/api
 ```
 
----
+Note: If this file is not created, Vite proxy configuration will automatically forward API requests to http://localhost:5000
 
-## Deployment
+Start Frontend Development Server:
+```bash
+npm run dev
+```
 
-- **Frontend**: https://dass-assignment1-eosin.vercel.app
-- **Backend**: https://dass-assignment1-vcqs.onrender.com
-- **Database**: MongoDB Atlas
+Frontend application will start on http://localhost:3000
 
----
+### Step 4: Access Application
 
-## User Credentials
+Open your web browser and navigate to http://localhost:3000
 
-**Admin**:
-- Email: `admin@felicity.iiit.ac.in`
-- Password: `Admin@123`
+Default Admin Login Credentials:
+- Email: admin@felicity.iiit.ac.in
+- Password: Admin@123
 
-**Sample Organizer**:
-- Email: `ecell@felicity.iiit.ac.in`
-- Password: `organizer123`
+To Register as Participant:
+- Click "Register here" link on the login page
+- Use any email address (IIIT or non-IIIT domain accepted)
+- Complete onboarding preferences after registration
 
-**Participants**: Register with any email
+## Production Deployment
 
----
+Live Application URLs:
+- Frontend: https://dass-assignment1-eosin.vercel.app
+- Backend: https://dass-assignment1-vcqs.onrender.com
+
+Deployment Platforms:
+- Frontend: Vercel (Static hosting with CDN)
+- Backend: Render (Node.js hosting with auto-scaling)
+- Database: MongoDB Atlas (Cloud-hosted database cluster)
+
+## Troubleshooting
+
+Backend server fails to start:
+- Verify MongoDB connection string format in .env file
+- Ensure MongoDB Atlas IP whitelist includes your IP address
+- Check if PORT 5000 is already in use: netstat -ano | findstr :5000
+- Kill existing process if port is occupied
+
+Frontend cannot connect to backend:
+- Confirm backend server is running on port 5000
+- Verify VITE_API_URL in frontend .env file
+- Check CORS settings in backend (FRONTEND_URL variable)
+- Clear browser cache and restart development servers
+
+Email notifications not working:
+- Email functionality is optional - application continues without it
+- Verify you are using Gmail App Password (not regular password)
+- Confirm 2-factor authentication is enabled on Gmail account
+- Check EMAIL_USER and EMAIL_PASS values in backend .env
+
+Database connection timeout:
+- Verify internet connection is stable
+- Check MongoDB Atlas cluster is active (not paused)
+- Ensure IP address is whitelisted in MongoDB Atlas Network Access
+- Verify database user credentials are correct
 
 ## Project Structure
 
 ```
 dass_assignment1/
 ├── backend/
-│   ├── controllers/     # Request handlers
-│   ├── models/          # Mongoose schemas
-│   ├── routes/          # API routes
-│   ├── middleware/      # Auth middleware
-│   ├── utils/           # Email, QR, token generators
-│   └── server.js
-├── frontend/
-│   ├── src/
-│   │   ├── components/  # Nav components, ProtectedRoute
-│   │   ├── pages/       # All page components
-│   │   ├── redux/       # State management
-│   │   └── services/    # API integration
-│   └── vite.config.js
-├── README.md
-└── deployment.txt
-```
-
----
-
-## Key Highlights
-
-- ✅ JWT authentication with role-based access control
-- ✅ Real-time team chat with Socket.io
-- ✅ QR code generation and scanning for attendance
-- ✅ Email confirmations for registrations
-- ✅ Dynamic form builder for events
-- ✅ Analytics dashboard for organizers
-- ✅ Responsive design
-- ✅ Production deployment on cloud platforms
-
----
-
-**Developer**: Swayam Goyal | **Course**: DASS (IIIT Hyderabad) | **Date**: February 2026
-
-
-## 🚀 Project Overview
-
-The Felicity Event Management System streamlines the organization of college fest events by providing a centralized platform for:
-- **Participants** to browse and register for events
-- **Organizers** to create and manage events
-- **Admins** to oversee clubs and organizers
-
-## 🛠️ Technology Stack
-
-- **MongoDB** - Database
-- **Express.js** - Backend framework
-- **React** (with Vite) - Frontend framework
-- **Node.js** - Runtime environment
-
-### Additional Technologies
-- **JWT** - Authentication
-- **bcrypt** - Password hashing
-- **Nodemailer** - Email service
-- **QR Code** - Ticket generation
-- **Redux Toolkit** - State management
-- **React Router** - Routing
-
-## 📋 Prerequisites
-
-Before you begin, ensure you have installed:
-- Node.js (v14.0.0 or higher)
-- npm (v6.0.0 or higher)
-- MongoDB Atlas account
-
-## 🔧 Installation
-
-### Quick Setup (Windows)
-
-1. **Install Backend Dependencies**
-   ```bash
-   # Double-click or run:
-   install-backend.bat
-   ```
-
-2. **Install Frontend Dependencies**
-   ```bash
-   # Double-click or run:
-   install-frontend.bat
-   ```
-
-### Manual Setup
-
-#### Backend Setup
-```bash
-cd backend
-npm install
-```
-
-#### Frontend Setup
-```bash
-cd frontend
-npm install
-```
-
-## ⚙️ Configuration
-
-### Backend Environment Variables
-
-Create a `.env` file in the `backend/` directory with the following variables:
-
-```env
-MONGODB_URI=your_mongodb_atlas_connection_string
-JWT_SECRET=your_super_secret_jwt_key
-PORT=5000
-
-# Email Configuration
-EMAIL_HOST=smtp.gmail.com
-EMAIL_PORT=587
-EMAIL_USER=your_email@gmail.com
-EMAIL_PASS=your_app_password
-
-# Admin Credentials
-ADMIN_EMAIL=admin@felicity.com
-ADMIN_PASSWORD=Admin@123
-
-# Frontend URL
-FRONTEND_URL=http://localhost:3000
-
-NODE_ENV=development
-```
-
-### MongoDB Atlas Setup
-
-1. Create an account at [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
-2. Create a new cluster
-3. Create a database user
-4. Whitelist your IP address (or use 0.0.0.0/0 for development)
-5. Get your connection string and update `MONGODB_URI` in `.env`
-
-## 🏃 Running the Application
-
-### Development Mode
-
-#### Start Backend Server
-```bash
-cd backend
-npm run dev
-# Server will run on http://localhost:5000
-```
-
-#### Start Frontend Development Server
-```bash
-cd frontend
-npm run dev
-# App will run on http://localhost:3000
-```
-
-### Production Build
-
-#### Build Frontend
-```bash
-cd frontend
-npm run build
-```
-
-## 📁 Project Structure
-
-```
-dass_assignment1/
-├── backend/
-│   ├── models/           # Database models (Participant, Organizer, Event, etc.)
-│   ├── routes/           # API routes
-│   ├── controllers/      # Route controllers
-│   ├── middleware/       # Custom middleware (auth, validation)
-│   ├── utils/            # Utility functions (email, QR, hashing)
-│   ├── config/           # Configuration files
-│   ├── scripts/          # Utility scripts (seed admin, etc.)
-│   ├── .env              # Environment variables
-│   ├── .gitignore
-│   ├── package.json
-│   └── server.js         # Entry point
+│   ├── models/              # Mongoose schemas (Participant, Organizer, Event, Team, etc.)
+│   ├── routes/              # Express route definitions
+│   ├── controllers/         # Business logic and request handlers
+│   ├── middleware/          # Authentication and validation middleware
+│   ├── utils/               # Helper functions (email, QR generation, tokens)
+│   ├── config/              # Configuration files
+│   ├── scripts/             # Utility scripts (admin seeding)
+│   ├── server.js            # Application entry point
+│   ├── package.json         # Dependencies and scripts
+│   └── .env                 # Environment variables (not in git)
 │
 ├── frontend/
 │   ├── src/
-│   │   ├── components/   # Reusable components
-│   │   ├── pages/        # Page components
-│   │   ├── redux/        # Redux store, slices
-│   │   ├── services/     # API service functions
-│   │   ├── utils/        # Helper functions
-│   │   ├── App.jsx       # Main App component
-│   │   ├── main.jsx      # Entry point
-│   │   └── index.css     # Global styles
-│   ├── public/           # Static assets
-│   ├── index.html
-│   ├── vite.config.js
-│   └── package.json
+│   │   ├── components/      # Reusable React components
+│   │   ├── pages/           # Page-level components
+│   │   ├── redux/           # Redux slices and store configuration
+│   │   ├── services/        # API integration functions
+│   │   ├── utils/           # Helper utilities
+│   │   ├── App.jsx          # Root application component
+│   │   ├── main.jsx         # React DOM rendering entry point
+│   │   └── index.css        # Global styles
+│   ├── public/              # Static assets
+│   ├── index.html           # HTML template
+│   ├── vite.config.js       # Vite configuration
+│   ├── package.json         # Dependencies and scripts
+│   └── .env                 # Environment variables (not in git)
 │
-├── install-backend.bat    # Backend dependency installer
-├── install-frontend.bat   # Frontend dependency installer
-├── deployment.txt         # Deployment URLs
-└── README.md             # This file
+├── deployment.txt           # Live deployment URLs
+└── README.md               # This file
 ```
 
-## 🎯 Features Implemented
+## Developer Information
 
-### Core System (70 Marks)
-- ✅ Authentication & Security (8 marks)
-- ✅ User Onboarding & Preferences (3 marks)
-- ✅ User Data Models (2 marks)
-- ✅ Event Types (2 marks)
-- ✅ Event Attributes (2 marks)
-- ✅ Participant Features (22 marks)
-- ✅ Organizer Features (18 marks)
-- ✅ Admin Features (6 marks)
-- ✅ Deployment (5 marks)
+Developer: Swayam Goyal
+Course: Design and Analysis of Software Systems (DASS)
+Institution: IIIT Hyderabad
+Repository: https://github.com/Swayamgoyal/dass_assignment1
 
-### Advanced Features (30 Marks)
-
-> [!NOTE]
-> Advanced features will be selected and implemented in Phase 8 of development.
-
-#### Tier A - Core Advanced Features (Choose 2)
-1. [ ] Hackathon Team Registration (8 marks)
-2. [ ] Merchandise Payment Approval Workflow (8 marks)
-3. [ ] QR Scanner & Attendance Tracking (8 marks)
-
-#### Tier B - Real-time & Communication Features (Choose 2)
-1. [ ] Real-Time Discussion Forum (6 marks)
-2. [ ] Organizer Password Reset Workflow (6 marks)
-3. [ ] Team Chat (6 marks)
-
-#### Tier C - Integration & Enhancement Features (Choose 1)
-1. [ ] Anonymous Feedback System (2 marks)
-2. [ ] Add to Calendar Integration (2 marks)
-3. [ ] Bot Protection (2 marks)
-
-## 🔐 Default Credentials
-
-### Admin Account
-- Email: admin@felicity.com
-- Password: Admin@123
-
-> [!WARNING]
-> Change these credentials in production!
-
-## 📡 API Endpoints
-
-### Authentication
-- `POST /api/auth/register/participant` - Participant registration
-- `POST /api/auth/login/participant` - Participant login
-- `POST /api/auth/login/organizer` - Organizer login
-- `POST /api/auth/login/admin` - Admin login
-
-### Events
-- `GET /api/events` - Get all events
-- `GET /api/events/:id` - Get event details
-- `POST /api/events/:id/register` - Register for event
-
-### Participant
-- `GET /api/participant/dashboard` - Get dashboard data
-- `GET /api/participant/profile` - Get profile
-- `PUT /api/participant/profile` - Update profile
-
-### Organizer
-- `GET /api/organizer/dashboard` - Get dashboard
-- `POST /api/organizer/events` - Create event
-- `GET /api/organizer/events/:id` - Get event details
-- `PUT /api/organizer/events/:id` - Update event
-
-### Admin
-- `GET /api/admin/organizers` - Get all organizers
-- `POST /api/admin/organizers` - Create new organizer
-- `DELETE /api/admin/organizers/:id` - Remove organizer
-
-## 🚢 Deployment
-
-### Frontend Deployment (Vercel/Netlify)
-1. Build the frontend: `npm run build`
-2. Deploy the `dist` folder to Vercel or Netlify
-3. Set environment variable: `VITE_API_URL=<backend-url>`
-
-### Backend Deployment (Render/Railway/Fly.io)
-1. Connect your GitHub repository
-2. Set all environment variables
-3. Deploy with: `npm start`
-
-### Deployment URLs
-See `deployment.txt` for live deployment links.
-
-## 📝 Development Timeline
-
-- Phase 1: Project Setup (Days 1-2)
-- Phase 2: Authentication & Security (Days 3-5)
-- Phase 3: User Onboarding & Profiles (Days 6-7)
-- Phase 4: Event Management (Days 8-11)
-- Phase 5: Participant Features (Days 12-16)
-- Phase 6: Organizer Features (Days 17-20)
-- Phase 7: Admin Features (Days 21-22)
-- Phase 8: Advanced Features (Days 23-28)
-- Phase 9: Deployment & Testing (Days 29-30)
-- Phase 10: Documentation (Day 31)
-
-## 🤝 Contributing
-
-This is an academic project. Collaboration is not permitted as per assignment guidelines.
-
-## ⚠️ Academic Integrity
-
-- No AI tools (ChatGPT, Copilot) were used
-- All code is original
-- No plagiarism from other sources
-
-## 📧 Contact
-
-For queries related to this project, contact via the submission portal.
-
-## 📄 License
-
-This project is part of an academic assignment for Design & Analysis of Software Systems.
